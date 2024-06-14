@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h1>Данные о валюте за 2023 год</h1>
+    {% if plot_div %}
+        {% autoescape off %}
+        {{ plot_div }}
+        {% endautoescape %}
+    {% else %}
+        <p>{{ error }}</p>
+    {% endif %}
+
+<form action="/home">
+   <button class="button" >Currency Information</button>
+  </form>
+
+<input type="range" id="lower" oninput="upper.value=this.value<this.max?this.value:upper.value" min="0" max="100" step="1">
+<input type="range" id="upper" oninput="lower.value=this.value>lower.min?this.value:lower.value" min="0" max="100" step="1">
+
+
+
+{% endblock %}
+</html>

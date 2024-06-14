@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>All Currencies</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Nominal</th>
+            <th>Name</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            {% for currency_name, currency_data in response.items %}
+            <td><p>{{ currency_data.Nominal }}</p></td>
+            <td><p>{{ currency_name }}: {{ currency_data.Name }}</p></td>
+            <td><p>= {{ currency_data.Value }} руб.</p></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+</html>

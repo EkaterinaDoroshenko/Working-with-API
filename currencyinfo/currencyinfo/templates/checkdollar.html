@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Выбор диапазона</h1>
+    <div id="slider-range"></div>
+    <div class="value-display">
+        <span id="slider-range-value1"></span> - <span id="slider-range-value2"></span>
+    </div>
+    <br><br>
+<br><br>
+    <!-- Форма для отправки данных на сервер -->
+    <form id="slider-form" method="POST">
+        {% csrf_token %}
+        <input type="hidden" id="min-value" name="min">
+        <input type="hidden" id="max-value" name="max">
+        <button type="button" id="submit-btn">Отобразить график</button>
+    </form>
+
+    <div id="chart-container"></div>
+
+    <!-- Подключение jQuery и noUiSlider JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
+    <script>
+        const slider = document.getElementById('slider-range');
+        const valueDisplay1 = document.getElementById('slider-range-value1');
+        const valueDisplay2 = document.getElementById('slider-range-value2');
+        const minValueInput = document.getElementById('min-value');
+        const maxValueInput = document.getElementById('max-value');
+
+        noUiSlider.create(slider, {
+            start: [2020, 2023], // Начальные значения
+            connect: true,
+            step: 1,
+            range: {
+                'min': 1994,
+                'max': 2024
+            },
+            tooltips: [true, true],
+            format: {
+                from: function(value) {
+                    return parseInt(value);
+                },
+                to: function(value) {
+                    return parseInt(value);
+                }
+            },
+            pips: {
+                mode: 'steps',
+                stepped: true,
+                density: 4
+            }
+        });
+
+        slider.noUiSlider.on('update', function (values, handle) {
+            // valueDisplay1.textContent = Math.round(values[0]);
+            // valueDisplay2.textContent = Math.round(values[1]);
+            minValueInput.value = Math.round(values[0]);
+            maxValueInput.value = Math.round(values[1]);
+        });
+
+        // Обработчик события клика на кнопке "Отобразить график"
+        document.getElementById('submit-btn').addEventListener('click', function() {
+            var form = document.getElementById('slider-form');
+            $.ajax({
+                url: '/checkdollar/',
+                type: 'POST',
+                data: $(form).serialize(),
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    // Обновление содержимого контейнера с графиком
+                    $('#chart-container').html(response);
+                },
+                error: function(error) {
+                    // Обработка ошибки
+                    console.log('Error:', error);
+                }
+            });
+        });
+    </script>
+{% endblock %}
