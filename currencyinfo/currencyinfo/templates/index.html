@@ -2,6 +2,10 @@
 {% block content %}
 
     <h1>Данные о валюте за 2023 год</h1>
+        <form action="{% url 'generate_excel_report' %}" method="get">
+            <button type="submit">Скачать отчет в Excel</button>
+        </form>
+
     {% if plot_div %}
         {% autoescape off %}
         {{ plot_div }}
@@ -14,8 +18,7 @@
    <button class="button" >Currency Information</button>
   </form>
 
-<input type="range" id="lower" oninput="upper.value=this.value<this.max?this.value:upper.value" min="0" max="100" step="1">
-<input type="range" id="upper" oninput="lower.value=this.value>lower.min?this.value:lower.value" min="0" max="100" step="1">
+
 
 
 
